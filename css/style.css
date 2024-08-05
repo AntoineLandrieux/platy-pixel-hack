@@ -1,0 +1,24 @@
+*, *::before, *::after {
+    color: #fff;
+    font-family: monospace, sans-serif;
+}
+
+html {
+    background-color: #000;
+}
+
+pre {
+    color: #5da323;
+}
+
+p {
+    color: #00b0e6;
+}
+
+b {
+    color: #ff07de;
+}
+
+b#msg.ok {
+    color: #468810;
+}
