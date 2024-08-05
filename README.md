@@ -21,6 +21,8 @@ msedge "https://127.0.0.1:8080"
 >
 > You can change image (120x60) in `resources/image/image.png`
 >
+> It is recommended to draw a little after running the script to save the pixels placed.
+>
 
 ![image](resources/github/image.png)
 
