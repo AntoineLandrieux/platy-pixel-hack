@@ -1,0 +1,23 @@
+# 
+# platy-pixel-hack 2025 <https://github.com/AntoineLandrieux/platy-pixel-hack>
+# 
+
+# IDE
+
+.vscode/
+.idea/
+
+# TMP
+
+bin/
+lib/
+min/
+tmp/
+
+# BIN
+
+*.a
+*.o
+*.bin
+*.exe
+*.res

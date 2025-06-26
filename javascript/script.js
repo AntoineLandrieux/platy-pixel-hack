@@ -1,63 +1,90 @@
 
-const game = document.createElement('canvas');
+const screen = document.createElement('canvas');
 
-game.width = 120;
-game.height = 60;
+screen.width = 120;
+screen.height = 60;
 
-var context = game.getContext("2d", { willReadFrequently: true });
+let loaded = false;
 
-var image = new Image(120, 60);
-
+let context = screen.getContext("2d", { willReadFrequently: true });
+let image = new Image(120, 60);
 image.crossOrigin = "Anonymous";
 image.src = "resources/image/image.png";
 
 const output = document.getElementById("msg");
 
-const firebaseConfig = {
-	// 👀
-};
+function pushPixel(db, x = 0, y = 0, pixel_color = "000000") {
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-function pushPixel(_X = 0, _Y = 0, _PixelColor = "ea0") {
     const pixel = {
-        x: _X,
-        y: _Y,
-        color: _PixelColor
+        x: x,
+        y: y,
+        color: pixel_color
     };
 
     console.log(pixel);
-    const pixelRef = db.collection('pixel').doc(`${_X}-${_Y}`);
+    const pixelRef = db.collection('pixel').doc(`${x}-${y}`);
     setTimeout(() => { pixelRef.set(pixel, { merge: true }); }, 100);
+
 }
 
-function getPixel(_X = 0, _Y = 0) {
-    let rgb = context.getImageData(_X, _Y, _X + 1, _Y + 1);
+function getPixel(x = 0, y = 0) {
+
+    let rgb = context.getImageData(x, y, x + 1, y + 1);
     let hex = "";
     let tmp = "";
 
     for (i = 0; i < 3; i++) {
+
         tmp = rgb.data[i].toString(16);
         tmp = tmp.length == 1 ? "0" + tmp : tmp;
         hex += tmp;
+
     }
 
     return hex;
+
 }
 
+document.getElementById("hack").addEventListener("click", function () {
 
-image.onload = () => {
-    if (!image)
+    if (!loaded) {
+
         return;
+
+    }
+
+    firebase.initializeApp({
+
+        apiKey: document.getElementById("apiKey").value,
+        authDomain: document.getElementById("authDomain").value,
+        projectId: document.getElementById("projectId").value,
+        storageBucket: document.getElementById("storageBucket").value,
+        messagingSenderId: document.getElementById("messagingSenderId").value,
+        appId: document.getElementById("appId").value
+
+    });
+
+    let db = firebase.firestore();
 
     context.drawImage(image, 0, 0);
     output.innerText = "Please wait...";
 
     for (y = 0; y < 60; y++)
         for (x = 0; x < 120; x++)
-            pushPixel(x * 10, y * 10, `#${getPixel(x, y)}`);
+            pushPixel(db, x * 10, y * 10, `#${getPixel(x, y)}`);
 
     output.innerText = "[OK]";
     output.classList.add("ok");
+
+})
+
+image.onload = () => {
+
+    if (image) {
+
+        loaded = true;
+        output.innerText = "[READY]";
+
+    }
+
 };
